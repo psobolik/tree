@@ -7,6 +7,7 @@ use std::{
 };
 
 use crate::args::{Args, PrefixSet};
+use colored::Colorize;
 use counts::Counts;
 
 fn main() {
@@ -78,7 +79,15 @@ fn print_tree_level(
                     println!(
                         "{}{}",
                         get_prefix(level_flags, index == last_entry_index, args.prefix_set()),
-                        dir_entry.file_name().to_string_lossy(),
+                        if dir_entry_path.is_dir() {
+                            dir_entry
+                                .file_name()
+                                .to_string_lossy()
+                                .on_blue()
+                                .bright_white()
+                        } else {
+                            dir_entry.file_name().to_string_lossy().white()
+                        },
                     );
 
                     if dir_entry_path.is_dir() {
@@ -104,11 +113,15 @@ fn print_tree_level(
                         counts.increment_files();
                     }
                 }
-                Err(why) => eprintln!("Error: Can't access '{:?}': {why:?}", dir_entries[index]),
+                Err(why) => {
+                    let message = format!("Error: '{:?}': {why:?}", dir_entries[index]);
+                    eprintln!("{}", message.red());
+                }
             });
         }
         Err(why) => {
-            eprintln!("Error: Can't read directory '{}': {why:?}", path.display());
+            let message = format!("Error: Can't read directory '{}': {why:?}", path.display());
+            eprintln!("{}", message.red());
         }
     }
 }

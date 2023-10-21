@@ -16,6 +16,9 @@ pub struct Args {
 impl Args {
     pub fn new() -> Args {
         let command_line_args = CommandLineArgs::parse();
+        if command_line_args.no_color || command_line_args.ascii {
+            std::env::set_var("NO_COLOR", "1")
+        }
         let prefix_set: PrefixSet = if command_line_args.ascii {
             PrefixSet {
                 parent_prefix: r"|   ".to_string(),

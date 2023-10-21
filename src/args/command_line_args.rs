@@ -7,8 +7,10 @@ pub struct CommandLineArgs {
     pub include_hidden: bool,
     #[arg(short, long, help = "List directories only")]
     pub dirs_only: bool,
-    #[arg(long, help = "Use ASCII instead of extended characters")]
+    #[arg(long, help = "Use ASCII instead of extended characters (implies --no-color)")]
     pub ascii: bool,
+    #[arg(short('C'), long, help = "Don't use color in output")]
+    pub no_color: bool,
     #[arg(short('L'), default_value_t = 0, help = "List maximum levels deep (0 for no limit)")]
     pub level: u32,
 
