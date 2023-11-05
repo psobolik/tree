@@ -49,30 +49,29 @@ fn print_tree_level(
             .collect()
     }
     fn get_prefix(level_flags: &Vec<bool>, is_last_entry: bool, prefix_set: &PrefixSet) -> String {
-        let mut result = String::new();
+        let mut result: Vec<&str> = vec![];
         for level_flag in level_flags {
-            result += if *level_flag {
+            result.push(if *level_flag {
                 prefix_set.parent_prefix.as_str()
             } else {
                 prefix_set.no_parent_prefix.as_str()
-            }
+            })
         }
-        result += if is_last_entry {
+        result.push(if is_last_entry {
             prefix_set.last_entry_prefix.as_str()
         } else {
             prefix_set.entry_prefix.as_str()
-        };
-        result
+        });
+        result.concat()
     }
     match fs::read_dir(path) {
         Ok(dir_entries) => {
             let dir_entries =
                 filter_dir_entries(dir_entries, args.include_hidden(), args.dirs_only());
-            let last_entry_index = if dir_entries.is_empty() {
-                0
-            } else {
-                dir_entries.len() - 1
-            };
+            if dir_entries.is_empty() {
+                return;
+            }
+            let last_entry_index = dir_entries.len() - 1;
             (0..dir_entries.len()).for_each(|index| match &dir_entries[index] {
                 Ok(dir_entry) => {
                     let dir_entry_path = dir_entry.path();

@@ -4,5 +4,4 @@ pub struct PrefixSet {
     pub no_parent_prefix: String,
     pub entry_prefix: String,
     pub last_entry_prefix: String,
-  }
-  
+}

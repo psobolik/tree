@@ -6,13 +6,6 @@ pub struct Counts {
 }
 
 impl Counts {
-    pub fn new() -> Counts {
-        Counts {
-            directories: 0,
-            files: 0,
-        }
-    }
-
     pub fn increment_directories(&mut self) {
         self.directories += 1;
     }
@@ -35,6 +28,14 @@ impl Counts {
             self.files.to_formatted_string(&Locale::en),
             Counts::select_plural(self.files, "file", "files")
         )
+    }
+}
+impl Counts {
+    pub fn new() -> Counts {
+        Counts {
+            directories: 0,
+            files: 0,
+        }
     }
 
     fn select_plural<'a>(value: u32, singular: &'a str, plural: &'a str) -> &'a str {

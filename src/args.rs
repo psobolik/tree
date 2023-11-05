@@ -1,9 +1,9 @@
 mod command_line_args;
 mod prefix_set;
 
-use std::path::{Path, PathBuf};
 use command_line_args::CommandLineArgs;
 pub use prefix_set::PrefixSet;
+use std::path::{Path, PathBuf};
 
 use clap::Parser;
 
@@ -13,6 +13,23 @@ pub struct Args {
     folder_absolute: PathBuf,
 }
 
+impl Args {
+    pub fn include_hidden(&self) -> bool {
+        self.command_line_args.include_hidden
+    }
+    pub fn dirs_only(&self) -> bool {
+        self.command_line_args.dirs_only
+    }
+    pub fn level(&self) -> u32 {
+        self.command_line_args.level
+    }
+    pub fn path_absolute(&self) -> &PathBuf {
+        &self.folder_absolute
+    }
+    pub fn prefix_set(&self) -> &PrefixSet {
+        &self.prefix_set
+    }
+}
 impl Args {
     pub fn new() -> Args {
         let command_line_args = CommandLineArgs::parse();
@@ -26,7 +43,7 @@ impl Args {
                 entry_prefix: r"+-- ".to_string(),
                 last_entry_prefix: r"\-- ".to_string(),
             }
-         } else {
+        } else {
             PrefixSet {
                 parent_prefix: r"│   ".to_string(),
                 no_parent_prefix: r"    ".to_string(),
@@ -40,7 +57,7 @@ impl Args {
         } else {
             match Args::absolute_path(&folder_path) {
                 Ok(f) => f,
-                _  => folder_path, // We'll validate the path later...
+                _ => folder_path, // We'll validate the path later...
             }
         };
         Args {
@@ -49,12 +66,6 @@ impl Args {
             folder_absolute,
         }
     }
-
-    pub fn include_hidden(&self) -> bool { self.command_line_args.include_hidden }
-    pub fn dirs_only(&self) -> bool { self.command_line_args.dirs_only }
-    pub fn level(&self) -> u32 { self.command_line_args.level }
-    pub fn path_absolute(&self) -> &PathBuf { &self.folder_absolute }
-    pub fn prefix_set(&self) -> &PrefixSet { &self.prefix_set }
 
     fn absolute_path(path: impl AsRef<Path>) -> std::io::Result<PathBuf> {
         let path = path.as_ref();
@@ -66,7 +77,7 @@ impl Args {
         };
         match absolute_path.canonicalize() {
             Ok(path) => Ok(path),
-            Err(_) => Ok(absolute_path)
+            Err(_) => Ok(absolute_path),
         }
     }
 }
