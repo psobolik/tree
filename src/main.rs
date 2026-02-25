@@ -119,8 +119,12 @@ fn print_tree_level(
             });
         }
         Err(why) => {
-            let message = format!("Error: Can't read directory '{}': {why:?}", path.display());
-            eprintln!("{}", message.red());
+            let message = format!("Error: Can't read directory '{}': {why}", path.display());
+            println!(
+                "{}{}",
+                get_prefix(level_flags, true, args.prefix_set()),
+                message.red(),
+            )
         }
     }
 }
